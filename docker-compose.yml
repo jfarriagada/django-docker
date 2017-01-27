@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  # contenedor con db psql
+  db:
+    image: postgres:9.5
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - db_data:/var/lib/postgresql/data/pgdata
+
+  # contenedor para django
+  web:
+    build: ./dj_docker
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./dj_docker:/dj_docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+# volumenes persistentes
+volumes:
+  db_data:
+    external: true
