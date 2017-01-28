@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  # contenedor con db psql
+  db:
+    image: postgres:9.5
+    # .env tiene los variables sensibles (db, secret key)
+    env_file: .env
+    volumes:
+      - db_data:/var/lib/postgresql/data/dj_docker
+
+  # contenedor para django
+  web:
+    build:
+      context: ./dj_docker
+    env_file: .env

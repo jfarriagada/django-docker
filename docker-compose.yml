@@ -1,20 +1,23 @@
+# por defecto este archivo es dev.yml
+
 version: '2'
 
 services:
-  # contenedor con db psql
+  # contenedor db con pgsql, extiende de base.yml
   db:
-    image: postgres:9.5
-    environment:
-      - POSTGRES_DB=mydb
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - db_data:/var/lib/postgresql/data/pgdata
+    extends:
+      file: base.yml
+      service: db
 
-  # contenedor para django
+  # contenedor para django, extiende de base.yml
   web:
-    build: ./dj_docker
+    extends:
+      file: base.yml
+      service: web
+    build:
+      args:
+        # instala requirements/dev.txt
+        - DJANGO_ENV=dev
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./dj_docker:/dj_docker
